@@ -1,0 +1,12 @@
+               precision    recall  f1-score   support
+
+     cracking       0.70      0.64      0.67        22
+         dirb       1.00      1.00      1.00      6628
+      dnsteal       0.84      1.00      0.91        37
+network_scans       0.75      0.60      0.67         5
+service_scans       0.75      0.33      0.46         9
+       wpscan       0.90      0.89      0.89       110
+
+     accuracy                           0.99      6811
+    macro avg       0.82      0.74      0.77      6811
+ weighted avg       0.99      0.99      0.99      6811

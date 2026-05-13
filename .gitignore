@@ -24,9 +24,7 @@ desktop.ini
 .vscode/
 .idea/
 
-# Local results and trained models
-results/
-*.joblib
+
 
 # Logs
 *.log

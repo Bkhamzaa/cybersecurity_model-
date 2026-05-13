@@ -1,0 +1,8 @@
+              precision    recall  f1-score   support
+
+      BENIGN       0.31      0.88      0.46      3517
+      ATTACK       0.01      0.00      0.00      6812
+
+    accuracy                           0.30     10329
+   macro avg       0.16      0.44      0.23     10329
+weighted avg       0.12      0.30      0.16     10329

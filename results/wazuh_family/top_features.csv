@@ -1,0 +1,21 @@
+,importance
+rule_firedtimes,0.1484210532479028
+timestamp_hour,0.11478800262878805
+timestamp_weekday,0.056528505688377875
+location_/var/log/apache2/intranet-access.log,0.0531159500727777
+agent_id,0.04765389448991533
+decoder_name_web-accesslog,0.0455271889012632
+rule_level,0.026621130271653703
+rule_groups_web|accesslog|attack,0.021690294576558355
+rule_id,0.020325627813986773
+rule_description_Web server 400 error code.,0.019802301194690494
+data_dstip_10.182.193.181:443,0.01909652321506114
+scenario_harrison,0.015716124976548645
+scenario_shaw,0.01410696372400995
+data_flow_bytes_toserver,0.01343979800848335
+predecoder_hostname_mail,0.011103152454697316
+scenario_wilson,0.010578563633303652
+data_flow_pkts_toserver,0.010533401122215283
+data_srcip_10.237.1.238,0.010416042491342455
+scenario_santos,0.010390705937495177
+data_flow_bytes_toclient,0.010377401916289504

@@ -1,0 +1,18 @@
+{
+  "dataset_type": "wazuh_alerts_8263181",
+  "mode": "family_arbiter",
+  "sample_frac": 0.02,
+  "max_records_per_file": null,
+  "test_rows": 10329,
+  "arbiter_reassigned_rows": 14,
+  "classes": [
+    "BENIGN",
+    "CredentialAccess",
+    "Execution",
+    "Exfiltration",
+    "PrivilegeEscalation",
+    "Scanning",
+    "WebAttack"
+  ],
+  "mean_anomaly_score": -0.024748947199920577
+}

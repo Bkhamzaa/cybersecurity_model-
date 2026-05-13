@@ -1,0 +1,36 @@
+{
+  "dataset_type": "wazuh_alerts_8263181",
+  "mode": "multiclass",
+  "sample_frac": 0.02,
+  "max_records_per_file": null,
+  "random_state": 42,
+  "n_estimators": 200,
+  "min_class_count": 20,
+  "drop_benign": true,
+  "dataset_rows": 34053,
+  "dataset_columns": 33,
+  "train_rows": 27242,
+  "test_rows": 6811,
+  "accuracy": 0.993980325943327,
+  "f1_macro": 0.7668862130528308,
+  "f1_weighted": 0.9937462804003143,
+  "classes": [
+    "cracking",
+    "dirb",
+    "dnsteal",
+    "network_scans",
+    "service_scans",
+    "wpscan"
+  ],
+  "label_distribution": {
+    "dirb": 33140,
+    "wpscan": 551,
+    "dnsteal": 182,
+    "cracking": 111,
+    "service_scans": 45,
+    "network_scans": 24
+  },
+  "auc_roc": 0.9825846171239366,
+  "auc_roc_weighted_ovr": 0.9994618947054457,
+  "auc_roc_macro_ovo": 0.9474026329843112
+}
