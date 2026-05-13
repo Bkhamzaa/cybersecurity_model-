@@ -1,35 +1,29 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
-
-from train_ids_model import main as train_main
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Shortcut entry point for training and evaluating the baseline IDS model."
+        description="Read saved metrics for the 8263181 Wazuh models."
     )
     parser.add_argument(
-        "--data-dir",
+        "--metrics-path",
         type=Path,
-        default=Path("dataset"),
-        help="Directory containing the dataset CSV files.",
-    )
-    parser.add_argument(
-        "--mode",
-        choices=("binary", "multiclass", "family"),
-        default="binary",
-        help="Classification mode.",
-    )
-    parser.add_argument(
-        "--sample-frac",
-        type=float,
-        default=0.05,
-        help="Fraction of rows sampled from each CSV file.",
+        required=True,
+        help="Path to a saved metrics.json file under results/.",
     )
     return parser.parse_args()
 
 
+def main() -> None:
+    args = parse_args()
+    metrics = json.loads(args.metrics_path.read_text(encoding="utf-8"))
+    for key, value in metrics.items():
+        print(f"{key}: {value}")
+
+
 if __name__ == "__main__":
-    train_main()
+    main()

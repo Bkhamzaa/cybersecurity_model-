@@ -19,25 +19,32 @@ from sklearn.metrics import (
 )
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import OneHotEncoder
 
 from data_preparation import clean_dataset, load_dataset, split_features_and_target, summarize_dataset
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Train an anomaly-detection layer for CIC-IDS-2018 using benign traffic."
+        description="Train an anomaly-detection layer on 8263181 Wazuh alerts."
     )
     parser.add_argument(
         "--data-dir",
         type=Path,
-        default=Path("dataset"),
-        help="Directory containing the dataset CSV files.",
+        default=Path("8263181"),
+        help="Directory containing labels.csv and ait_ads/*.json.",
     )
     parser.add_argument(
         "--sample-frac",
         type=float,
-        default=0.05,
-        help="Fraction of rows sampled from each CSV file.",
+        default=0.02,
+        help="Fraction of Wazuh events sampled from each file.",
+    )
+    parser.add_argument(
+        "--max-records-per-file",
+        type=int,
+        default=None,
+        help="Optional hard cap on the number of sampled records per file.",
     )
     parser.add_argument(
         "--random-state",
@@ -48,8 +55,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--contamination",
         type=float,
-        default=0.15,
-        help="Expected fraction of anomalies used by IsolationForest.",
+        default=0.12,
+        help="Expected fraction of anomalies for IsolationForest.",
     )
     parser.add_argument(
         "--output-dir",
@@ -64,32 +71,25 @@ def build_pipeline(x: pd.DataFrame, random_state: int, contamination: float) -> 
     numeric_columns = x.select_dtypes(include=[np.number]).columns.tolist()
     categorical_columns = [column for column in x.columns if column not in numeric_columns]
 
-    transformers: list[tuple[str, Pipeline, list[str]]] = [
-        (
-            "num",
-            Pipeline(
-                steps=[
-                    ("imputer", SimpleImputer(strategy="median")),
-                ]
+    preprocessor = ColumnTransformer(
+        transformers=[
+            (
+                "num",
+                Pipeline([("imputer", SimpleImputer(strategy="median"))]),
+                numeric_columns,
             ),
-            numeric_columns,
-        )
-    ]
-
-    if categorical_columns:
-        transformers.append(
             (
                 "cat",
                 Pipeline(
-                    steps=[
+                    [
                         ("imputer", SimpleImputer(strategy="most_frequent")),
+                        ("encoder", OneHotEncoder(handle_unknown="ignore")),
                     ]
                 ),
                 categorical_columns,
-            )
-        )
-
-    preprocessor = ColumnTransformer(transformers=transformers)
+            ),
+        ]
+    )
 
     model = IsolationForest(
         n_estimators=200,
@@ -98,12 +98,7 @@ def build_pipeline(x: pd.DataFrame, random_state: int, contamination: float) -> 
         n_jobs=-1,
     )
 
-    return Pipeline(
-        steps=[
-            ("preprocessor", preprocessor),
-            ("model", model),
-        ]
-    )
+    return Pipeline([("preprocessor", preprocessor), ("model", model)])
 
 
 def save_outputs(
@@ -113,17 +108,11 @@ def save_outputs(
     confusion: np.ndarray,
     pipeline: Pipeline,
 ) -> None:
-    result_dir = output_dir / "anomaly"
+    result_dir = output_dir / "wazuh_anomaly"
     result_dir.mkdir(parents=True, exist_ok=True)
 
-    (result_dir / "metrics.json").write_text(
-        json.dumps(metrics, indent=2),
-        encoding="utf-8",
-    )
-    (result_dir / "classification_report.txt").write_text(
-        report_text,
-        encoding="utf-8",
-    )
+    (result_dir / "metrics.json").write_text(json.dumps(metrics, indent=2), encoding="utf-8")
+    (result_dir / "classification_report.txt").write_text(report_text, encoding="utf-8")
     pd.DataFrame(
         confusion,
         index=["true_benign", "true_attack"],
@@ -140,6 +129,7 @@ def main() -> None:
         mode="binary",
         sample_frac=args.sample_frac,
         random_state=args.random_state,
+        max_records_per_file=args.max_records_per_file,
     )
     dataset = clean_dataset(dataset)
     summarize_dataset(dataset)
@@ -155,9 +145,7 @@ def main() -> None:
         stratify=y_binary,
     )
 
-    benign_train_mask = y_train == 0
-    x_train_benign = x_train.loc[benign_train_mask]
-
+    x_train_benign = x_train.loc[y_train == 0]
     pipeline = build_pipeline(
         x=x_train_benign,
         random_state=args.random_state,
@@ -192,8 +180,10 @@ def main() -> None:
     print(confusion)
 
     metrics = {
+        "dataset_type": "wazuh_alerts_8263181",
         "mode": "binary_anomaly",
         "sample_frac": args.sample_frac,
+        "max_records_per_file": args.max_records_per_file,
         "random_state": args.random_state,
         "contamination": args.contamination,
         "dataset_rows": int(len(dataset)),
@@ -215,7 +205,7 @@ def main() -> None:
         confusion=confusion,
         pipeline=pipeline,
     )
-    print(f"\nSaved outputs to: {args.output_dir / 'anomaly'}")
+    print(f"\nSaved outputs to: {args.output_dir / 'wazuh_anomaly'}")
 
 
 if __name__ == "__main__":
