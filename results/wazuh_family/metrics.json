@@ -7,13 +7,13 @@
   "n_estimators": 200,
   "min_class_count": 20,
   "drop_benign": true,
-  "dataset_rows": 34053,
+  "dataset_rows": 45053,
   "dataset_columns": 33,
-  "train_rows": 27242,
-  "test_rows": 6811,
-  "accuracy": 0.9969167523124358,
-  "f1_macro": 0.825977670069119,
-  "f1_weighted": 0.9970675447593812,
+  "train_rows": 36042,
+  "test_rows": 9011,
+  "accuracy": 0.9980024414604373,
+  "f1_macro": 0.9949827404949232,
+  "f1_weighted": 0.9980038855726612,
   "classes": [
     "CredentialAccess",
     "Exfiltration",
@@ -21,12 +21,12 @@
     "WebAttack"
   ],
   "label_distribution": {
-    "WebAttack": 33691,
-    "Exfiltration": 182,
-    "CredentialAccess": 111,
-    "Scanning": 69
+    "WebAttack": 35691,
+    "Exfiltration": 3182,
+    "CredentialAccess": 3111,
+    "Scanning": 3069
   },
-  "auc_roc": 0.999379502812564,
-  "auc_roc_weighted_ovr": 0.9997373660496238,
-  "auc_roc_macro_ovo": 0.9653541184925664
+  "auc_roc": 0.9999655178847868,
+  "auc_roc_weighted_ovr": 0.9999836781757768,
+  "auc_roc_macro_ovo": 0.9998771252684361
 }

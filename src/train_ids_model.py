@@ -262,6 +262,7 @@ def main() -> None:
         min_class_count=args.min_class_count,
         drop_benign=args.drop_benign,
     )
+
     summarize_dataset(dataset)
 
     x, y = split_features_and_target(dataset)
